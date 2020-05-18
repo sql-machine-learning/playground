@@ -18,6 +18,7 @@ digraph G {
                         label="sqlflow/sqlflow:latest";
                         Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
                         SQLFlow [label="SQLFlow server"];
+                        ModelZoo [label="Model Zoo server"];
                         DBMS [label="MySQL"];
                 }
                 subgraph cluster_minikube {
@@ -42,4 +43,5 @@ digraph G {
 
         User3 -> Client;
         Client -> SQLFlow [label="SQL/Flow program"];
+        Client -> ModelZoo [label="share models or use shared models"];
 }

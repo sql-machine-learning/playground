@@ -14,6 +14,7 @@ digraph G {
 
         Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
         SQLFlow [label="SQLFlow server"];
+        ModelZoo [label="Model Zoo server\n"];
         Argo [label="Tekton on Kubernetes\n(each workflow step is a container)"];
         AI [label="AI engine\n(Alibaba PAI, KubeFlow+Kuberntes, etc)"];
         DBMS [label="database system\n(Hive, MySQL, MaxCompute, etc)"];
@@ -33,4 +34,5 @@ digraph G {
 
         User3 -> Client;
         Client -> SQLFlow [label="SQL/Flow program"];
+        Client -> ModelZoo [label="share models or use shared models"];
 }
