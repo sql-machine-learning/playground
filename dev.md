@@ -36,7 +36,7 @@ To run SQLFlow on a desktop computer running Windows, Linux, or macOS, an end-us
 
 If the end-user has VirtualBox installed -- no Vagrant required -- s/he could import the `.ova` file and start an VM.
 
-Or, if s/he has an AWS or Google Cloud account, s/he could upload the `.ova` file to start the VM on the cloud.
+Or, if s/he has an AWS or Google Cloud account, s/he could upload the `.ova` file to start the VM on the cloud.  AWS users can follow [these steps](https://aws.amazon.com/ec2/vm-import/).
 
 Anyway, given a running VM, the end-user can run the following command to connect to it:
 
