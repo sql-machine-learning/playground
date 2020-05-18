@@ -1,0 +1,37 @@
+digraph G {
+        node [shape=box];
+
+        User1 [shape=oval, label="Lily"];
+        User2 [shape=oval, label="Bob"];
+        User3 [shape=oval, label="Eva"];
+
+        {rank = same; User1; User2; User3}
+
+        Browser1 [label="Web browser"];
+        Browser2 [label="Web browser"];
+
+        {rank = same; Browser1, Browser2, Client}
+
+        Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
+        SQLFlow [label="SQLFlow server"];
+        Argo [label="Tekton on Kubernetes\n(each workflow step is a container)"];
+        AI [label="AI engine\n(Alibaba PAI, KubeFlow+Kuberntes, etc)"];
+        DBMS [label="database system\n(Hive, MySQL, MaxCompute, etc)"];
+
+        User1 -> Browser1;
+        User2 -> Browser2;
+        Browser1 -> Jupyter [label="SQL/Flow program"];
+        Browser2 -> Jupyter;
+
+        Jupyter -> SQLFlow [label="SQL/Flow program"];
+        SQLFlow -> Argo [label="Argo workflow"];
+        Argo -> DBMS [label="submit SQL statement"];
+        Argo -> AI [label="submit AI job"];
+
+        SQLFlow -> DBMS [label="verify data schema"];
+
+        Client [label="sqlflow command-line client"];
+
+        User3 -> Client;
+        Client -> SQLFlow [label="SQL/Flow program"];
+}

@@ -1,17 +1,15 @@
 # Provision SQLFlow Desktop for Linux
 
-I use Ubuntu 18.04 as the base Vagrant image.  The following commands
-download the VM image, starts a VM, and SSH into this VM.
+This is an experimental work to check deploying the whole SQLFlow
+service mesh on a Ubuntu 18.04 VM.
 
-```bash
-vagrant init ubuntu/bionic64
-vagrant up
-vagrant ssh
-```
+The general architecture of SQLFlow is as the following:
 
-In the VM, I need to install Docker.
+![](figures/arch.svg)
 
-```bash
-sudo apt update
-sudo apt install -y docker.io
-```
+In this deployment, we have Jupyter Notebook server, SQLFlow server,
+and MySQL running in a container executing the
+`sqlflow/sqlflow:latest` image.  Argo runs on a minikube cluster
+running on the VM.  The deployment is shown in the folllowing figure:
+
+![](figures/arch_vm.svg)
