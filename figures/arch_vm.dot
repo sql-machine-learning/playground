@@ -36,8 +36,7 @@ digraph G {
         SQLFlow -> Argo [label="Argo workflow"];
         Argo -> DBMS [label="submit SQL statement"];
         Argo -> AI [label="submit AI job"];
-
-        SQLFlow -> DBMS [label="verify data schema"];
+        Argo -> DBMS [label="verify data schema"];
 
         Client [label="sqlflow command-line client"];
 
