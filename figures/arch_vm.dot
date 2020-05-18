@@ -18,10 +18,13 @@ digraph G {
                         label="sqlflow/sqlflow:latest";
                         Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
                         SQLFlow [label="SQLFlow server"];
-                        DBMS [label="MySQL)"];
+                        DBMS [label="MySQL"];
                 }
-                Argo [label="minikube + Tekton"];
-                AI [label="AI engine\n(Alibaba PAI, KubeFlow+Kuberntes, etc)"];
+                subgraph cluster_minikube {
+                    label="minikube";
+                    Argo [label="Argo"];
+                    AI [label="AI engine:\ncontainer-local run"];
+                }
         }
 
         User1 -> Browser1;
