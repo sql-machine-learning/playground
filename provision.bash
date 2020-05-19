@@ -17,14 +17,26 @@ echo "Docker pull SQLFlow images ..."
 docker pull --quiet sqlflow/sqlflow:latest
 echo "Done."
 
+# The shared folder is specified in Vagrantfile.
+VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
+
+echo "Install axel ..."
+if which axel > /dev/null; then
+    echo "axel installed. Skip."
+else
+    $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_axel.sh
+fi
+
 echo "Export Kubernetes environment variables ..."
-source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
+# NOTE: According to https://stackoverflow.com/a/16619261/724872,
+# source is very necessary here.
+source $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/export_k8s_vars.sh
 
 echo "Installing kubectl ..."
 if which kubectl > /dev/null; then
     echo "kubectl installed. Skip."
 else
-    $(dirname $0)/sqlflow/scripts/travis/install_kubectl.sh
+    $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_kubectl.sh
 fi
 echo "Done."
 
@@ -32,7 +44,7 @@ echo "Installing minikube ..."
 if which minikube > /dev/null; then
     echo "minikube installed. Skip."
 else
-    $(dirname $0)/sqlflow/scripts/travis/install_minikube.sh
+    $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_minikube.sh
 fi
 echo "Done."
 
