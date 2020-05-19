@@ -11,12 +11,11 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 50051, host: 50051
   config.vm.network "forwarded_port", guest: 8888, host: 8888
 
-  # public_network eases debugging -- I can SSH from iMac to the VM
-  # without the need of forwarding port to the host workstation.
-  config.vm.network "public_network", ip: "192.168.0.17"
-
   config.vm.provider "virtualbox" do |v|
     v.memory = 16384
     v.cpus = 8
   end
+
+  # Bind the host directory ./ into the VM.
+  config.vm.synced_folder "./", "/home/vagrant/desktop"
 end
