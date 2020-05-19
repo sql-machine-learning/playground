@@ -19,4 +19,6 @@ set -e
 source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
 
 $(dirname $0)/sqlflow/scripts/travis/start_minikube.sh
+sudo chown -R vagrant: $HOME/.minikube/
+
 $(dirname $0)/sqlflow/scripts/travis/start_argo.sh
