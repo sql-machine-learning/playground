@@ -1,4 +1,4 @@
-# Provision SQLFlow Desktop for Linux
+# Release SQLFlow Desktop Distribution as a VM Image
 
 This is an experimental work to check deploying the whole
 [SQLFlow](https://sqlflow.org/sqlflow) service mesh on Windows, Linux,
