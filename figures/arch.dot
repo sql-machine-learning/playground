@@ -14,7 +14,8 @@ digraph G {
 
         Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
         SQLFlow [label="SQLFlow server"];
-        ModelZoo [label="Model Zoo server\n"];
+        ModelZoo [label="Model Zoo server\n(with MySQL to store relational data)"];
+        DockerRegistry [label="Docker registry"];
         Argo [label="Tekton on Kubernetes\n(each workflow step is a container)"];
         AI [label="AI engine\n(Alibaba PAI, KubeFlow+Kuberntes, etc)"];
         DBMS [label="database system\n(Hive, MySQL, MaxCompute, etc)"];
@@ -29,6 +30,10 @@ digraph G {
         Argo -> DBMS [label="submit SQL statement"];
         Argo -> AI [label="submit AI job"];
         Argo -> DBMS [label="verify data schema"];
+        ModelZoo -> DockerRegistry [label="release model definition"];
+        DockerRegistry -> SQLFlow [label="use model definition"];
+        SQLFlow -> DBMS [label="save trained models"];
+        ModelZoo -> DBMS [label="share trained models"];
 
         Client [label="sqlflow command-line client"];
 
