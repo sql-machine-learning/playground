@@ -2,7 +2,6 @@
 
 set -e  # Exit script if any error
 
-
 echo "Installing Docker ..."
 # c.f. https://dockr.ly/3cExcay
 if which docker > /dev/null; then
@@ -13,15 +12,13 @@ else
 fi
 echo "Done."
 
-
 echo "Docker pull SQLFlow images ..."
 # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
 docker pull --quiet sqlflow/sqlflow:latest
 echo "Done."
 
-
 echo "Export Kubernetes environment variables ..."
-$(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
+source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
 
 echo "Installing kubectl ..."
 if which kubectl > /dev/null; then
@@ -31,7 +28,6 @@ else
 fi
 echo "Done."
 
-
 echo "Installing minikube ..."
 if which minikube > /dev/null; then
     echo "minikube installed. Skip."
@@ -39,7 +35,6 @@ else
     $(dirname $0)/sqlflow/scripts/travis/install_minikube.sh
 fi
 echo "Done."
-
 
 echo "Configure minikube ..."
 mkdir -p /home/vagrant/.kube /home/vagrant/.minikube

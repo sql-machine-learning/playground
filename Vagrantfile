@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
-  config.vm.provision "shell", path: "provision.sh"
+  config.vm.provision "shell", path: "provision.bash"
 
   # Don't forward 22.  Even if we do so, the exposed port only binds
   # to 127.0.0.1, but not 0.0.0.0.  Other ports binds to all IPs.
