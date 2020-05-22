@@ -9,7 +9,13 @@
 1. The `vagrant up` command starts the VM and runs `provision.sh` as user `root`.  The `provision.sh` installs Docker and minikube and pulls related Docker images.  It also generates a `start.sh`.  Users should run `vagrant ssh` and execute `start.sh` inside the VM as user `vagrant`.  The `start.sh` starts minikube, deploys Argo/Tekton, and run all the services in the VM.
 1. Every time we edit the `provison.sh`, we can run `vagrant provision` to rerun `provision.sh` as root.  This rerun would see the previously installed software.  So `provision.sh` contains some `if..else` structures to skip reinstalling software.
 1. To suspend the VM, run `vagrant halt`.  You can run `vagrant up` later to resume it.
-1. To completely destroy the VM and re-provision it, run `vagrant reload`.
+1. To completely destroy the VM and re-provision it, run `vagrant destroy` and `vagrant up`.
+
+We have provided an install shell script for you to get an easy initialization.  You can run it with:
+```bash
+./install.sh [inchina]
+```
+It will guide you to setup the vagrant environment.  Especially, for developers in China, you may add the `inchina` param to download the ubuntu box for vagrant beforehand.  After the initialization, you will have a virtual machine named `playground_default...` in VirtualBox which is already provisioned.  You may follow the direction of the output to get things done.
 
 ### For Releaser
 
@@ -41,5 +47,5 @@ Or, if s/he has an AWS or Google Cloud account, s/he could upload the `.ova` fil
 Anyway, given a running VM, the end-user can run the following command to connect to it:
 
 ```bash
-sqlflow -server=my-vm.aws.com:3306
+sqlflow --sqlflow_server=my-vm.aws.com:50051
 ```
