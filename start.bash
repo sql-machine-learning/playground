@@ -14,6 +14,11 @@
 
 set -e
 
+echo "Docker pull SQLFlow images ..."
+# c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
+docker pull sqlflow/sqlflow:latest
+echo "Done."
+
 # NOTE: According to https://stackoverflow.com/a/16619261/724872,
 # source is very necessary here.
 source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh

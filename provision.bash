@@ -2,23 +2,36 @@
 
 set -e  # Exit script if any error
 
+# The shared folder is specified in Vagrantfile.
+VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
+
+. $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
+
+echo "Setting apt-get mirror..."
+$(find_fastest_apt_source >/etc/apt/sources.list)
+
 echo "Installing Docker ..."
 # c.f. https://dockr.ly/3cExcay
 if which docker > /dev/null; then
     echo "Docker had been installed. Skip."
 else
-    curl -fsSL https://get.docker.com | sh -
+    best_install_url=$(find_fastest_docker_url)
+    echo "Using ${best_install_url}..."
+    curl -sSL ${best_install_url} | sh -
+    best_docker_mirror=$(find_fastest_docker_mirror)
+    if [[ -n "${best_docker_mirror}" ]]; then
+        mkdir -p /etc/docker
+        cat <<-EOF >/etc/docker/daemon.json
+	{ 
+	  "graph": "/mnt/docker-data",
+	  "storage-driver": "overlay",
+	  "registry-mirrors":[ "${best_docker_mirror}" ]
+	}
+	EOF
+    fi
     usermod -aG docker vagrant
 fi
 echo "Done."
-
-echo "Docker pull SQLFlow images ..."
-# c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
-docker pull --quiet sqlflow/sqlflow:latest
-echo "Done."
-
-# The shared folder is specified in Vagrantfile.
-VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 
 echo "Install axel ..."
 if which axel > /dev/null; then
@@ -53,3 +66,4 @@ mkdir -p /home/vagrant/.kube /home/vagrant/.minikube
 touch /home/vagrant/.kube/config
 chown -R vagrant /home/vagrant/.bashrc
 echo "Done."
+
