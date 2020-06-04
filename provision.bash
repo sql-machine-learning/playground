@@ -5,20 +5,22 @@ set -e  # Exit script if any error
 # The shared folder is specified in Vagrantfile.
 VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 
-. $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
+source $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
 
 echo "Setting apt-get mirror..."
-$(find_fastest_apt_source >/etc/apt/sources.list)
+find_fastest_apt_source >/etc/apt/sources.list
+apt-get update
 
 echo "Installing Docker ..."
 # c.f. https://dockr.ly/3cExcay
-if which docker > /dev/null; then
+if ! which docker > /dev/null; then
     echo "Docker had been installed. Skip."
 else
     best_install_url=$(find_fastest_docker_url)
+    docker_ce_mirror=$(find_fastest_docker_ce_mirror)
     echo "Using ${best_install_url}..."
-    curl -sSL ${best_install_url} | sh -
-    best_docker_mirror=$(find_fastest_docker_mirror)
+    curl -sSL "${best_install_url}" | DOWNLOAD_URL=$docker_ce_mirror bash -
+    best_docker_mirror=$(find_fastest_docker_registry)
     if [[ -n "${best_docker_mirror}" ]]; then
         mkdir -p /etc/docker
         cat <<-EOF >/etc/docker/daemon.json

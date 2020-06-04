@@ -38,6 +38,11 @@ if [[ -n "$(vagrant global-status --prune | grep -o 'playground')" ]]; then
   exit 0
 fi
 
+echo "Installing vagrant disk size plugin..."
+if [[ -z "$(vagrant plugin list | grep -o 'vagrant-disksize')" ]]; then
+    vagrant plugin install vagrant-disksize
+fi
+
 if [[ "$WE_ARE_IN_CHINA" ]]; then
   if [[ -z "$(vagrant box list | grep -o ubuntu/bionic64)" ]]; then
     echo "Download ubuntu box beforehand..."
