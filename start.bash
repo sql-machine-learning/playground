@@ -16,13 +16,15 @@ if [[ "$(whoami)" != "root" ]]; then
     exit
 fi
 
-echo "Docker pull dependency images ..."
+echo "Docker pull dependency images, you can comment this if already have them ..."
 # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
 docker pull sqlflow/sqlflow:jupyter
 docker pull sqlflow/sqlflow:mysql
 docker pull sqlflow/sqlflow:server
 docker pull sqlflow/sqlflow:step
 docker pull argoproj/argoexec:v2.7.7
+docker pull argoproj/argocli:v2.7.7
+docker pull argoproj/workflow-controller:v2.7.7
 echo "Done."
 
 # NOTE: According to https://stackoverflow.com/a/16619261/724872,
@@ -40,15 +42,17 @@ set +e
 # "$3" is expected output
 function wait_until() {
     echo -n "Waiting for $1 "
-    while [[ true ]]; do
+    for i in {1..50}; do
         $2 | grep -o -q "$3"
         if [[ $? -eq 0 ]]; then
-            break
+            echo "Done"
+            return
         fi
         echo -n "."
         sleep 3
     done
-    echo "Done"
+    echo "Fail"
+    exit
 }
 
 # Use a faster kube image and docker registry
@@ -73,50 +77,49 @@ fi
 
 wait_until "minikube" "minikube status" "apiserver: Running"
 
-# Test if a Kubernetes resource is alive
+# Test if a Kubernetes pod is ready
 # "$1" shoulde be namespace id e.g. argo
-# "$2" should be resource id e.g. pod/argo-server
-function is_resource_alive() {
-    local type=$(echo "$2" | cut -d / -f1)
-    local name=$(echo "$2" | cut -d / -f2)
-    if kubectl get -n "$1" "$2" 2>/dev/null | grep -q -o "$name" >/dev/null; then
-        # make sure relative pod is alive
-        if kubectl get pod -n "$1" 2>/dev/null | grep "$name" | grep "Running" >/dev/null; then
-            echo "yes"
-        else
-            echo "no"
-        fi
+# "$2" should be pod selector e.g. k8s-app=kubernetes-dashboard
+function is_pod_ready() {
+    pod=$(kubectl get pod -n "$1" -l "$2" -o name | tail -1)
+    if [[ -z "$pod" ]]; then
+        echo "no"
+        return
+    fi
+    ready=$(kubectl get -n "$1" "$pod" -o jsonpath='{.status.containerStatuses[0].ready}')
+    if [[ "$ready" == "true" ]]; then
+        echo "yes"
     else
         echo "no"
     fi
 }
 
 echo "Start argo ..."
-argo_server_alive=$(is_resource_alive "argo" "service/argo-server")
+argo_server_alive=$(is_pod_ready "argo" "app=argo-server")
 if [[ "$argo_server_alive" == "yes" ]]; then
     echo "Already in running."
 else
     $(dirname $0)/sqlflow/scripts/travis/start_argo.sh
 fi
-wait_until "argo" "is_resource_alive argo service/argo-server" "yes"
+wait_until "argo" "is_pod_ready argo app=argo-server" "yes"
 
 echo "Strat Kubernetes Dashboard ..."
-dashboard_alive=$(is_resource_alive "kubernetes-dashboard" "service/kubernetes-dashboard")
+dashboard_alive=$(is_pod_ready "kubernetes-dashboard" "k8s-app=kubernetes-dashboard")
 if [[ "$dashboard_alive" == "yes" ]]; then
     echo "Already in running."
 else
-    nohup minikube dashboard &
+    nohup minikube dashboard >/dev/null 2>&1 &
 fi
-wait_until "Kubernetes Dashboard" "is_resource_alive kubernetes-dashboard service/kubernetes-dashboard" "yes"
+wait_until "Kubernetes Dashboard" "is_pod_ready kubernetes-dashboard k8s-app=kubernetes-dashboard" "yes"
 
 echo "Strat SQLFlow ..."
-sqlflow_alive=$(is_resource_alive "default" "pod/sqlflow-server")
+sqlflow_alive=$(is_pod_ready "default" "app=sqlflow-server")
 if [[ "$sqlflow_alive" == "yes" ]]; then
     echo "Already in running."
 else
     kubectl apply -f sqlflow/doc/run/k8s/install-sqlflow.yaml
 fi
-wait_until "SQLFlow" "is_resource_alive default pod/sqlflow-server" "yes"
+#wait_until "SQLFlow" "is_pod_ready default app=sqlflow-server" "yes"
 
 # Kill port exposing if it already exist
 function stop_expose() {
