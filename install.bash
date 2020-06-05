@@ -15,10 +15,6 @@
 
 set -e
 
-if [[ "$1" == "inchina" ]]; then
-  export WE_ARE_IN_CHINA=true
-fi
-
 echo
 echo "Welcome to SQLFlow playground!"
 echo
@@ -43,16 +39,10 @@ if [[ -z "$(vagrant plugin list | grep -o 'vagrant-disksize')" ]]; then
     vagrant plugin install vagrant-disksize
 fi
 
-if [[ "$WE_ARE_IN_CHINA" ]]; then
-  if [[ -z "$(vagrant box list | grep -o ubuntu/bionic64)" ]]; then
-    echo "Download ubuntu box beforehand..."
-    mkdir -p downloads
-    # try with https://mirrors.ustc.edu.cn/ if below not work
-    wget -c -nv --show-progress -O downloads/ubuntu-bionic64.box "https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
-    vagrant box add ubuntu/bionic64 downloads/ubuntu-bionic64.box
-  fi
+CACHED_BOX="$HOME/.cache/sqlflow/ubuntu-bionic64.box"
+if [[ -f $CACHED_BOX ]]; then
+    vagrant box add ubuntu/bionic64 $CACHED_BOX
 fi
 
 echo "Start and provision the playgound now..."
 vagrant up
-

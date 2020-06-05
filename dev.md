@@ -11,11 +11,20 @@
 1. To suspend the VM, run `vagrant halt`.  You can run `vagrant up` later to resume it.
 1. To completely destroy the VM and re-provision it, run `vagrant destroy` and `vagrant up`.
 
-We have provided an install shell script for you to get an easy initialization.  You can run it with:
+We provided a shell script to start a VM running the SQLFlow service.
+
 ```bash
-./install.sh [inchina]
+./play.sh
 ```
-It will guide you to setup the vagrant environment.  Especially, for developers in China, you may add the `inchina` param to download the ubuntu box for vagrant beforehand.  After the initialization, you will have a virtual machine named `playground_default...` in VirtualBox which is already provisioned.  You may follow the direction of the output to get things done.
+
+If you have a slow Internet connection to Vagrant Cloud, you might want to
+download the Ubuntu VirtualBox image manually from some mirror sites into
+`~/.cache/sqlflow/` before running the above script.
+
+```bash
+wget -c -nv --show-progress -O downloads/ubuntu-bionic64.box \
+"https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
+```
 
 ### For Releaser
 
