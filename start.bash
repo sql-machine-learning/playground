@@ -37,10 +37,11 @@ source $(dirname $0)/sqlflow/docker/dev/find_fastest_resources.sh
 set +e
 
 # Execute cmd until given output is present
+# or exit when timeout (50*3s)
 # "$1" is user message
 # "$2" is cmd
 # "$3" is expected output
-function wait_until() {
+function wait_or_exit() {
     echo -n "Waiting for $1 "
     for i in {1..50}; do
         $2 | grep -o -q "$3"
@@ -75,7 +76,7 @@ else
     fi
 fi
 
-wait_until "minikube" "minikube status" "apiserver: Running"
+wait_or_exit "minikube" "minikube status" "apiserver: Running"
 
 # Test if a Kubernetes pod is ready
 # "$1" shoulde be namespace id e.g. argo
@@ -101,7 +102,7 @@ if [[ "$argo_server_alive" == "yes" ]]; then
 else
     $(dirname $0)/sqlflow/scripts/travis/start_argo.sh
 fi
-wait_until "argo" "is_pod_ready argo app=argo-server" "yes"
+wait_or_exit "argo" "is_pod_ready argo app=argo-server" "yes"
 
 echo "Strat Kubernetes Dashboard ..."
 dashboard_alive=$(is_pod_ready "kubernetes-dashboard" "k8s-app=kubernetes-dashboard")
@@ -110,7 +111,7 @@ if [[ "$dashboard_alive" == "yes" ]]; then
 else
     nohup minikube dashboard >/dev/null 2>&1 &
 fi
-wait_until "Kubernetes Dashboard" "is_pod_ready kubernetes-dashboard k8s-app=kubernetes-dashboard" "yes"
+wait_or_exit "Kubernetes Dashboard" "is_pod_ready kubernetes-dashboard k8s-app=kubernetes-dashboard" "yes"
 
 echo "Strat SQLFlow ..."
 sqlflow_alive=$(is_pod_ready "default" "app=sqlflow-server")
@@ -119,7 +120,7 @@ if [[ "$sqlflow_alive" == "yes" ]]; then
 else
     kubectl apply -f sqlflow/doc/run/k8s/install-sqlflow.yaml
 fi
-#wait_until "SQLFlow" "is_pod_ready default app=sqlflow-server" "yes"
+wait_or_exit "SQLFlow" "is_pod_ready default app=sqlflow-server" "yes"
 
 # Kill port exposing if it already exist
 function stop_expose() {
