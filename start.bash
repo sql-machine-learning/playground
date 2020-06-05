@@ -13,7 +13,7 @@
 # limitations under the License.
 if [[ "$(whoami)" != "root" ]]; then
     echo "Please change to root user and retry."
-    exit
+    exit 1
 fi
 
 echo "Docker pull dependency images, you can comment this if already have them ..."
