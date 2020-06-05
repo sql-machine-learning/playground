@@ -13,7 +13,7 @@ apt-get update
 
 echo "Installing Docker ..."
 # c.f. https://dockr.ly/3cExcay
-if ! which docker > /dev/null; then
+if which docker > /dev/null; then
     echo "Docker had been installed. Skip."
 else
     best_install_url=$(find_fastest_docker_url)
