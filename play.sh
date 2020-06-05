@@ -46,10 +46,12 @@ if [[ -z "$(vagrant plugin list | grep -o 'vagrant-disksize')" ]]; then
     vagrant plugin install vagrant-disksize
 fi
 
-CACHED_BOX="$HOME/.cache/sqlflow/ubuntu-bionic64.box"
-if [[ -f $CACHED_BOX ]]; then
-    echo "Found and use cached box $CACHED_BOX"
-    vagrant box add ubuntu/bionic64 $CACHED_BOX
+if [[ -z "$(vagrant box list | grep 'ubuntu/bionic64')" ]]; then
+    CACHED_BOX="$HOME/.cache/sqlflow/ubuntu-bionic64.box"
+    if [[ -f $CACHED_BOX ]]; then
+        echo "Found and use cached box $CACHED_BOX"
+        vagrant box add ubuntu/bionic64 $CACHED_BOX
+    fi
 fi
 
 echo "Start and provision the playgound VM ..."
