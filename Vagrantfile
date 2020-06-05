@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "provision.bash"
 
   # Enlarge disk size from default '10G' to '20G'
-  # This need the vagrant-disksize plugin which is installed in install.bash
+  # This need the vagrant-disksize plugin which is installed in play.sh.
   config.disksize.size = '20GB'
 
   # Don't forward 22.  Even if we do so, the exposed port only binds
