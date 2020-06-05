@@ -22,8 +22,8 @@ download the Ubuntu VirtualBox image manually from some mirror sites into
 `~/.cache/sqlflow/` before running the above script.
 
 ```bash
-wget -c -nv --show-progress -O downloads/ubuntu-bionic64.box \
-"https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
+curl -Lo $HOME/.cache/sqlflow/ubuntu-bionic64.box \
+  "https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
 ```
 
 ### For Releaser
