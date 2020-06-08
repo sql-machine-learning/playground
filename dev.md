@@ -9,15 +9,15 @@
     cd playground
     git submodule update --init
     ```
-1. Run the `play.sh` under playgound's root directory.  This script will guide you to install SQLFlow on a virtualbox VM.  If you have a slow Internet connection to Vagrant Cloud, you might want to download the Ubuntu VirtualBox image manually from some mirror sites into `~/.cache/sqlflow/` before running the above script.
+1. Run the `play.sh` under playgound's root directory.  This script will guide you to install SQLFlow on a virtualbox VM.  If you have a slow Internet connection to Vagrant Cloud, you might want to download the Ubuntu VirtualBox image manually from some mirror sites into `~/.cache/sqlflow/` before running the above script.  We use `get -c` here for continuing get the file from last breakpoint, so if this command fail, just re-run it.
     ```bash
     mkdir -p $HOME/.cache/sqlflow
-    curl -Lo $HOME/.cache/sqlflow/ubuntu-bionic64.box \
+    wget -c -O $HOME/.cache/sqlflow/ubuntu-bionic64.box \
       "https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
     ```
     The `start.sh` add some extensions for Vagrant, like `vagrant-disksize` which enlarge the disk size of the VM.  The script will then call `vagrant up` command to bootup the VM.  After the VM is up, the `provision.sh` will be automatically executed which will install the dependencies for SQLFlow.  Provision is a one-shot work, after it is done, we will have an environment with SQLFlow, docker and minikube installed.
 
-1. Log on the VM and start SQLFlow playground.  Run the `start.bash` script, it will pull some docker images and start the playground minikube cluster.  As the pulling of images may be slow, the script might fail sometimes.  Fell free to re-run the script untill gou get some output like `Access Jupyter Notebook at ...`.
+1. Log on the VM and start SQLFlow playground.  Run the `start.bash` script, it will pull some docker images and start the playground minikube cluster.  As the images pulling may be slow, the script might fail sometimes.  Feel free to re-run the script until gou get some output like `Access Jupyter Notebook at ...`.
     ```bash
     vagrant ssh
     sudo su
@@ -31,9 +31,6 @@
     minikube stop
     ```
 1. Finally if you want to stop the VM, you can run the `vagrant halt` command.  To complete destroy the VM, run the `vagrant destroy` command.
-    ```bash
-    vagrant halt
-    ```
 
 ### For Releaser
 
