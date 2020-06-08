@@ -25,7 +25,7 @@
     ./start.bash
     ```
 1. After the minikube is started up. You can and access the `Jupyter Notebook` from your desktop. Or you can use SQLFlow command-line tool `sqlflow` to access the `SQLFlow server`.  Just follow the output of the `start.bash`, it will give you some hint.
-1. After playing a while you may want to stop SQLFlow playground, just log on the VM again and stop the minikube cluster.
+1. After playing a while, you may want to stop SQLFlow playground, just log on the VM again and stop the minikube cluster.
     ```bash
     vagrant ssh # optional if you already logged on
     minikube stop
