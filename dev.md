@@ -3,28 +3,34 @@
 ### For Developers
 
 1. Install VirtualBox and Vagrant on a computer with a relatively large memory size.
-1. `git clone https://github.com/sql-machine-learning/desktop && cd desktop`
-1. To build and start the VM: `vagrant up`
-1. To SSH into the VM: `vagrant ssh`
-1. The `vagrant up` command starts the VM and runs `provision.sh` as user `root`.  The `provision.sh` installs Docker and minikube and pulls related Docker images.  It also generates a `start.sh`.  Users should run `vagrant ssh` and execute `start.sh` inside the VM as user `vagrant`.  The `start.sh` starts minikube, deploys Argo/Tekton, and run all the services in the VM.
-1. Every time we edit the `provison.sh`, we can run `vagrant provision` to rerun `provision.sh` as root.  This rerun would see the previously installed software.  So `provision.sh` contains some `if..else` structures to skip reinstalling software.
-1. To suspend the VM, run `vagrant halt`.  You can run `vagrant up` later to resume it.
-1. To completely destroy the VM and re-provision it, run `vagrant destroy` and `vagrant up`.
+1. Clone and update `SQLFlow playground` project.
+    ```bash
+    git clone https://github.com/sql-machine-learning/playground.git
+    cd playground
+    git submodule update --init
+    ```
+1. Run the `play.sh` under playgound's root directory.  This script will guide you to install SQLFlow on a virtualbox VM.  If you have a slow Internet connection to Vagrant Cloud, you might want to download the Ubuntu VirtualBox image manually from some mirror sites into `~/.cache/sqlflow/` before running the above script.  We use `get -c` here for continuing get the file from last breakpoint, so if this command fail, just re-run it.
+    ```bash
+    mkdir -p $HOME/.cache/sqlflow
+    wget -c -O $HOME/.cache/sqlflow/ubuntu-bionic64.box \
+      "https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
+    ```
+    The `start.sh` add some extensions for Vagrant, like `vagrant-disksize` which enlarge the disk size of the VM.  The script will then call `vagrant up` command to bootup the VM.  After the VM is up, the `provision.sh` will be automatically executed which will install the dependencies for SQLFlow.  Provision is a one-shot work, after it is done, we will have an environment with SQLFlow, docker and minikube installed.
 
-We provided a shell script to start a VM running the SQLFlow service.
-
-```bash
-./play.sh
-```
-
-If you have a slow Internet connection to Vagrant Cloud, you might want to
-download the Ubuntu VirtualBox image manually from some mirror sites into
-`~/.cache/sqlflow/` before running the above script.
-
-```bash
-curl -Lo $HOME/.cache/sqlflow/ubuntu-bionic64.box \
-  "https://mirrors.ustc.edu.cn/ubuntu-cloud-images/bionic/current/bionic-server-cloudimg-amd64-vagrant.box"
-```
+1. Log on the VM and start SQLFlow playground.  Run the `start.bash` script, it will pull some docker images and start the playground minikube cluster.  As the images pulling may be slow, the script might fail sometimes.  Feel free to re-run the script until gou get some output like `Access Jupyter Notebook at ...`.
+    ```bash
+    vagrant ssh
+    sudo su
+    cd desktop
+    ./start.bash
+    ```
+1. After the minikube is started up. You can and access the `Jupyter Notebook` from your desktop. Or you can use SQLFlow command-line tool `sqlflow` to access the `SQLFlow server`.  Just follow the output of the `start.bash`, it will give you some hint.
+1. After playing a while, you may want to stop SQLFlow playground, just log on the VM again and stop the minikube cluster.
+    ```bash
+    vagrant ssh # optional if you already logged on
+    minikube stop
+    ```
+1. Finally if you want to stop the VM, you can run the `vagrant halt` command.  To complete destroy the VM, run the `vagrant destroy` command.
 
 ### For Releaser
 
