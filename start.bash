@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cat <<EOF
+echo -e "
+\033[32m
 This script is safe to re-run, feel free to retry when it exits abnormally.
 Especially when we are waiting for a pod in Kubernetes cluster, it may
 pull image from registry and take a lot of time to startup.
-
-EOF
+\033[0m
+"
 
 if [[ "$(whoami)" != "root" ]]; then
     echo "Please change to root user and retry."
