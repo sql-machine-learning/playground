@@ -2,14 +2,14 @@
 
 ### For Developers
 
-1. Install [VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://www.vagrantup.com/) on a computer with a relatively large memory size.
+1. Install [VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://www.vagrantup.com/) on a computer with a relatively large memory size.  As a recommendation, a host with 16G memory and 8 cores is preferred.
 1. Clone and update `SQLFlow playground` project.
     ```bash
     git clone https://github.com/sql-machine-learning/playground.git
     cd playground
     git submodule update --init
     ```
-1. Run the `play.sh` under playgound's root directory.  This script will guide you to install SQLFlow on a virtualbox VM.  If you have a slow Internet connection to Vagrant Cloud, you might want to download the Ubuntu VirtualBox image manually from some mirror sites into `~/.cache/sqlflow/` before running the above script.  We use `get -c` here for continuing get the file from last breakpoint, so if this command fail, just re-run it.
+1. Run the `play.sh` under playgound's root directory.  This script will guide you to install SQLFlow on a virtualbox VM.  If you have a slow Internet connection to Vagrant Cloud, you might want to download the Ubuntu VirtualBox image manually from some mirror sites into `~/.cache/sqlflow/` before running the above script.  We use `wget -c` here for continuing get the file from last breakpoint, so if this command fail, just re-run it.
     ```bash
     # download Vagrant image manually, optional
     mkdir -p $HOME/.cache/sqlflow
