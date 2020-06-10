@@ -36,8 +36,10 @@ EOF
     exit 1
 fi
 
-if [[ -n "$(vagrant global-status --prune | grep -o 'playground')" ]]; then
+if [[ -n "$(vagrant global-status --prune | grep 'playground' | grep 'running')" ]]; then
     echo "The playground VM is running."
+    echo "You may want to log on the VM with: vagrant ssh"
+    echo "Or stop the playground with: vagrant halt"
     exit 0
 fi
 
@@ -56,3 +58,13 @@ fi
 
 echo "Start and provision the playgound VM ..."
 vagrant up
+
+echo -e "\033[32m
+Playground VM has been successfully set up. You may want to go into the VM and start the SQLFlow playground using the following command:
+
+vagrant ssh
+sudo su
+cd desktop && ./start.bash
+
+\033[0m"
+

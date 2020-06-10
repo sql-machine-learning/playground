@@ -8,6 +8,7 @@ VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 source $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
 
 echo "Setting apt-get mirror..."
+rm /etc/apt/sources.list && sync
 find_fastest_apt_source >/etc/apt/sources.list
 apt-get update
 
@@ -61,11 +62,5 @@ if which minikube > /dev/null; then
 else
     $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_minikube.sh
 fi
-echo "Done."
-
-echo "Configure minikube ..."
-mkdir -p /home/vagrant/.kube /home/vagrant/.minikube
-touch /home/vagrant/.kube/config
-chown -R vagrant /home/vagrant/.bashrc
 echo "Done."
 
