@@ -64,3 +64,29 @@ else
 fi
 echo "Done."
 
+echo "Copy files ..."
+# In non-develop mode, we want the user see the start.bash
+# immediately after she/he logs on the vm
+cp "$VAGRANT_SHARED_FOLDER/start.bash" "/root/"
+
+read -r -d '\t' files <<EOM
+sqlflow/scripts/travis/export_k8s_vars.sh
+sqlflow/docker/dev/find_fastest_resources.sh
+sqlflow/scripts/travis/start_argo.sh
+sqlflow/doc/run/k8s/install-sqlflow.yaml
+\t
+EOM
+
+mkdir -p "/root/scripts"
+for file in ${files[@]}; do
+    cp "$VAGRANT_SHARED_FOLDER/$file" "/root/scripts/$(basename $file)"
+done
+echo "Done."
+
+echo "Change root password ..."
+echo "root:vagrant" | chpasswd
+sed -i -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
+    -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' \
+    /etc/ssh/sshd_config
+service ssh restart
+echo "Done."
