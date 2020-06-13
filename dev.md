@@ -49,15 +49,18 @@ According to this [tutorial](https://www.techrepublic.com/article/how-to-import-
 
 To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need to download
 
-1. the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI, and
-1. the released `SQLFlowPlayground.ova`, download [here](http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova).
+1. the released `SQLFlowPlayground.ova`, directly download from [here](http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova), or use wget:
+    ```bash
+    wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova
+    ```
+1. optional, the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
 
 If you have VirtualBox installed, you can import the `SQLFlowPlayground.ova` file and start a VM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `vagrant`.
 ```bash
 ssh -p2222 root@127.0.0.1
 root@127.0.0.1's password: vagrant
 ```
-Once logged in the VM, you will immediately see a script named `start.bash`, just run the script to start SQLFlow playground. It will output some hint messages for you, follow those hints, after a while, you will see something like `Access Jupyter NoteBook at: http://127.0.0.1:8888/...`, it means we are all set. Enjoy it!
+Once logged in the VM, you will immediately see a script named `start.bash`, just run the script to start SQLFlow playground.  It will output some hint messages for you, follow those hints, after a while, you will see something like `Access Jupyter NoteBook at: http://127.0.0.1:8888/...`, it means we are all set.  Copy the link to your web browser  and you will see SQLFlow's Jupyter Notebook user interface, Enjoy it!
 ```bash
 ./start.bash
 ```
