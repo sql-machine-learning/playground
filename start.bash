@@ -25,6 +25,9 @@ if [[ "$(whoami)" != "root" ]]; then
     exit 1
 fi
 
+# script base dir for starting the minikube cluster
+filebase=/root/scripts
+
 echo "Docker pull dependency images, you can comment this if already have them ..."
 # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
 docker pull sqlflow/sqlflow:jupyter
@@ -38,8 +41,8 @@ echo "Done."
 
 # NOTE: According to https://stackoverflow.com/a/16619261/724872,
 # source is very necessary here.
-source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
-source $(dirname $0)/sqlflow/docker/dev/find_fastest_resources.sh
+source $filebase/export_k8s_vars.sh
+source $filebase/find_fastest_resources.sh
 
 # (FIXME:lhw) If grep match nothing and return 1, do not exit
 # Find a way that we do not need to use 'set -e'
@@ -109,7 +112,7 @@ argo_server_alive=$(is_pod_ready "argo" "app=argo-server")
 if [[ "$argo_server_alive" == "yes" ]]; then
     echo "Already in running."
 else
-    $(dirname $0)/sqlflow/scripts/travis/start_argo.sh
+    $filebase/start_argo.sh
 fi
 wait_or_exit "argo" "is_pod_ready argo app=argo-server" "yes"
 
@@ -127,7 +130,7 @@ sqlflow_alive=$(is_pod_ready "default" "app=sqlflow-server")
 if [[ "$sqlflow_alive" == "yes" ]]; then
     echo "Already in running."
 else
-    kubectl apply -f sqlflow/doc/run/k8s/install-sqlflow.yaml
+    kubectl apply -f $filebase/install-sqlflow.yaml
 fi
 wait_or_exit "SQLFlow" "is_pod_ready default app=sqlflow-server" "yes"
 

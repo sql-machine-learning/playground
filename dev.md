@@ -39,28 +39,33 @@
 
 The releaser, which, in most cases, is a developer, can export a running VirtualBox VM into a VM image file with extension `.ova`.  An `ova` file is a tarball of a directory, whose content follows the OVF specification.  For the concepts, please refer to this [explanation](https://damiankarlson.com/2010/11/01/ovas-and-ovfs-what-are-they-and-whats-the-difference/).
 
-According to this [tutorial](https://www.techrepublic.com/article/how-to-import-and-export-virtualbox-appliances-from-the-command-line/), releasers can run the following command to list running VMs.
+According to this [tutorial](https://www.techrepublic.com/article/how-to-import-and-export-virtualbox-appliances-from-the-command-line/), releasers can call the VBoxManage command to export a VM. We have written a scrip to do this.  Simply run below script to export our playground.  This script will create a file named `SQLFlowPlayground.ova`, we can import the file through virtual box GUI.
 
 ```bash
-vboxmanage list vms
-```
-
-Then, they can run the following command to export the `.ova` file.
-
-```bash
-vboxmanage export UBUNTUSERVER164 -o ubuntu_server_new.ova
+./publish
 ```
 
 ### For End-users
 
-To run SQLFlow on a desktop computer running Windows, Linux, or macOS, an end-user needs to download
+To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need to download
 
-1. the `sqlflow` command-line tool released by SQLFlow CI, and
-1. the released `.ova` file.
+1. the released `SQLFlowPlayground.ova`, directly download from [here](http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova), or use wget:
+    ```bash
+    wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova
+    ```
+1. optional, the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
 
-If the end-user has VirtualBox installed -- no Vagrant required -- s/he could import the `.ova` file and start an VM.
+If you have VirtualBox installed, you can import the `SQLFlowPlayground.ova` file and start a VM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `vagrant`.
+```bash
+ssh -p2222 root@127.0.0.1
+root@127.0.0.1's password: vagrant
+```
+Once logged in the VM, you will immediately see a script named `start.bash`, just run the script to start SQLFlow playground.  It will output some hint messages for you, follow those hints, after a while, you will see something like `Access Jupyter NoteBook at: http://127.0.0.1:8888/...`, it means we are all set.  Copy the link to your web browser  and you will see SQLFlow's Jupyter Notebook user interface, Enjoy it!
+```bash
+./start.bash
+```
 
-Or, if s/he has an AWS or Google Cloud account, s/he could upload the `.ova` file to start the VM on the cloud.  AWS users can follow [these steps](https://aws.amazon.com/ec2/vm-import/).
+Or, if you has an AWS or Google Cloud account, you can upload the `.ova` file to start the VM on the cloud.  AWS users can follow [these steps](https://aws.amazon.com/ec2/vm-import/).
 
 Anyway, given a running VM, the end-user can run the following command to connect to it:
 
