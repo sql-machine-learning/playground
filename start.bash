@@ -156,14 +156,15 @@ expose default pod/sqlflow-server 8888:8888
 expose default pod/sqlflow-server 3306:3306
 expose default pod/sqlflow-server 50051:50051
 
-jupyter_addr=$(kubectl logs pod/sqlflow-server notebook | grep -o -E "http://127.0.0.1[^?]+\?token=.*" | head -1)
+# Get Jupyter Notebook's token, for single-user mode, we disabled the token checking
+# jupyter_addr=$(kubectl logs pod/sqlflow-server notebook | grep -o -E "http://127.0.0.1[^?]+\?token=.*" | head -1)
 mysql_addr="mysql://root:root@tcp($(kubectl get -o jsonpath='{.status.podIP}' pod/sqlflow-server))/?maxAllowedPacket=0"
 
 echo -e "
 \033[32m
 Congratulations, SQLFlow playground is up!
 
-Access Jupyter Notebook at: $jupyter_addr
+Access Jupyter Notebook at: http://localhost:8888
 Access Kubernetes Dashboard at: http://localhost:9000
 Access Argo Dashboard at: http://localhost:9001
 Access SQLFlow with cli: ./sqlflow --datasource="\"$mysql_addr\""

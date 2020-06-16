@@ -32,6 +32,10 @@ VBoxManage sharedfolder remove "$vm" --name home_vagrant_desktop
 VBoxManage sharedfolder remove "$vm" --name vagrant
 echo "Done."
 
+echo "Rebind serial port file"
+VBoxManage modifyvm "$vm" --uartmode1 file /tmp/playground.log
+echo "Done."
+
 echo "Exporting vm ..."
 VBoxManage export "$vm" -o SQLFlowPlayground.ova
 echo "Done."
