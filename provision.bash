@@ -8,7 +8,7 @@ VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 source $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
 
 echo "Setting apt-get mirror..."
-rm /etc/apt/sources.list && sync
+rm -rf /var/lib/apt/lists/*
 find_fastest_apt_source >/etc/apt/sources.list
 apt-get update
 
