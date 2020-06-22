@@ -84,7 +84,7 @@ done
 echo "Done."
 
 echo "Change root password ..."
-echo "root:vagrant" | chpasswd
+echo "root:sqlflow" | chpasswd
 sed -i -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
     -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' \
     /etc/ssh/sshd_config
