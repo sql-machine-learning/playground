@@ -42,7 +42,7 @@ The releaser, which, in most cases, is a developer, can export a running Virtual
 According to this [tutorial](https://www.techrepublic.com/article/how-to-import-and-export-virtualbox-appliances-from-the-command-line/), releasers can call the VBoxManage command to export a VM. We have written a scrip to do this.  Simply run below script to export our playground.  This script will create a file named `SQLFlowPlayground.ova`, we can import the file through virtual box GUI.
 
 ```bash
-./publish
+./release.sh
 ```
 
 ### For End-users
@@ -55,10 +55,10 @@ To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need 
     ```
 1. optional, the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
 
-If you have VirtualBox installed, you can import the `SQLFlowPlayground.ova` file and start a VM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `vagrant`.
+If you have VirtualBox installed, you can import the `SQLFlowPlayground.ova` file and start a VM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `sqlflow`.
 ```bash
 ssh -p2222 root@127.0.0.1
-root@127.0.0.1's password: vagrant
+root@127.0.0.1's password: sqlflow
 ```
 Once logged in the VM, you will immediately see a script named `start.bash`, just run the script to start SQLFlow playground.  It will output some hint messages for you, follow those hints, after a while, you will see something like `Access Jupyter NoteBook at: http://127.0.0.1:8888/...`, it means we are all set.  Copy the link to your web browser  and you will see SQLFlow's Jupyter Notebook user interface, Enjoy it!
 ```bash
@@ -70,5 +70,5 @@ Or, if you has an AWS or Google Cloud account, you can upload the `.ova` file to
 Anyway, given a running VM, the end-user can run the following command to connect to it:
 
 ```bash
-sqlflow --sqlflow_server=my-vm.aws.com:50051
+sqlflow --sqlflow-server=my-vm.aws.com:50051
 ```
