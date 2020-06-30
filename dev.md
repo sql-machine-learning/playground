@@ -49,9 +49,14 @@ According to this [tutorial](https://www.techrepublic.com/article/how-to-import-
 
 To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need to download
 
-1. the released `SQLFlowPlayground.ova`, directly download from [here](http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova), or use wget:
+1. the released VirtualBox `.ova` file, you have two choices:
+    - the minimized image (about 600M): shipped with all bootstrap files but no dependency docker images. When you start the playground, you will wait for a while to download the latest docker images, minikube framework and other packages.
     ```bash
-    wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlayground.ova
+    wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlaygroundBare.ova
+    ```
+    - the full installed image (about 2G): with all dependencies, no extra downloading is needed when starting. Note that in this case, the images will not be updated automatically, you will do it manually when needed.
+    ```bash
+    wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlaygroundFull.ova
     ```
 1. optional, the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
 

@@ -29,14 +29,22 @@ fi
 filebase=/root/scripts
 
 echo "Docker pull dependency images, you can comment this if already have them ..."
-# c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
-docker pull sqlflow/sqlflow:jupyter
-docker pull sqlflow/sqlflow:mysql
-docker pull sqlflow/sqlflow:server
-docker pull sqlflow/sqlflow:step
-docker pull argoproj/argoexec:v2.7.7
-docker pull argoproj/argocli:v2.7.7
-docker pull argoproj/workflow-controller:v2.7.7
+if [[ -d "/root/.cache" ]]; then
+    echo "Cache found at /root/.cache ..."
+    if [[ ! -f "/root/.cache/.loaded" ]]; then
+        find /root/.cache/* | xargs -I'{}' docker load -i '{}'
+        touch /root/.cache/.loaded
+    fi
+else
+    # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
+    docker pull sqlflow/sqlflow:jupyter
+    docker pull sqlflow/sqlflow:mysql
+    docker pull sqlflow/sqlflow:server
+    docker pull sqlflow/sqlflow:step
+    docker pull argoproj/argoexec:v2.7.7
+    docker pull argoproj/argocli:v2.7.7
+    docker pull argoproj/workflow-controller:v2.7.7
+fi
 echo "Done."
 
 # NOTE: According to https://stackoverflow.com/a/16619261/724872,
@@ -167,7 +175,7 @@ Congratulations, SQLFlow playground is up!
 Access Jupyter Notebook at: http://localhost:8888
 Access Kubernetes Dashboard at: http://localhost:9000
 Access Argo Dashboard at: http://localhost:9001
-Access SQLFlow with cli: ./sqlflow --datasource="\"$mysql_addr\""
+Access SQLFlow with cli: ./sqlflow --data-source="\"$mysql_addr\""
 
 Stop minikube with: minikube stop
 Stop vagrant vm with: vagrant halt

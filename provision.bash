@@ -61,6 +61,7 @@ if which minikube > /dev/null; then
     echo "minikube installed. Skip."
 else
     $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_minikube.sh
+    minikube config set WantUpdateNotification false
 fi
 echo "Done."
 
