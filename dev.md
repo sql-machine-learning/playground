@@ -2,7 +2,7 @@
 
 ### For Developers
 
-1. Install [VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://www.vagrantup.com/) on a computer with a relatively large memory size.  As a recommendation, a host with 16G memory and 8 cores is preferred.
+1. Install [VirtualBox 6.1.6](https://www.virtualbox.org/) and [Vagrant 2.2.7](https://www.vagrantup.com/) on a computer with a relatively large memory size.  As a recommendation, a host with 16G memory and 8 cores is preferred.
 1. Clone and update `SQLFlow playground` project.
     ```bash
     git clone https://github.com/sql-machine-learning/playground.git
@@ -47,9 +47,10 @@ According to this [tutorial](https://www.techrepublic.com/article/how-to-import-
 
 ### For End-users
 
-To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need to download
+To run SQLFlow on a desktop computer running Windows, Linux, or macOS, follow below steps:
+1. install [VirtualBox](https://www.virtualbox.org/) (v6.1.6 is recommended)
 
-1. the released VirtualBox `.ova` file, you have two choices:
+1. download the released VirtualBox `.ova` file, you have two choices:
     - the minimized image (about 600M): shipped with all bootstrap files but no dependency docker images. When you start the playground, you will wait for a while to download the latest docker images, minikube framework and other packages.
     ```bash
     wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlaygroundBare.ova
@@ -58,9 +59,9 @@ To run SQLFlow on a desktop computer running Windows, Linux, or macOS, you need 
     ```bash
     wget -c http://cdn.sqlflow.tech/latest/SQLFlowPlaygroundFull.ova
     ```
-1. optional, the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
+1. optional, download the [sqlflow](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/cli.md) command-line tool released by SQLFlow CI.
 
-If you have VirtualBox installed, you can import the `SQLFlowPlayground.ova` file and start a VM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `sqlflow`.
+After VirtualBox is installed, you can import the `.ova` file and start a VM.  If you have a relative lower configuration, you can adjust the CPU core and RAM amount in VirtualBox's setting panel, say, to 2 cores and 4G RAM.  After that, you can log in the system through the VirtualBox GUI or through a ssh connection like below.  The default password of `root` is `sqlflow`.
 ```bash
 ssh -p2222 root@127.0.0.1
 root@127.0.0.1's password: sqlflow

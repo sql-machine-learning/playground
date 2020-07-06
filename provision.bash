@@ -8,7 +8,7 @@ VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 source $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
 
 echo "Setting apt-get mirror..."
-rm -rf /var/lib/apt/lists/*
+rm -rf /var/lib/apt/lists/* /etc/apt/sources.list
 find_fastest_apt_source >/etc/apt/sources.list
 apt-get update
 
@@ -90,4 +90,12 @@ sed -i -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
     -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' \
     /etc/ssh/sshd_config
 service ssh restart
+echo "Done."
+
+
+echo "Disable cloudimg grub settings ..."
+sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/g' \
+    -e 's/^#GRUB_TERMINAL=console$/GRUB_TERMINAL=console/g' /etc/default/grub
+rm /etc/default/grub.d/50-cloudimg-settings.cfg
+update-grub
 echo "Done."

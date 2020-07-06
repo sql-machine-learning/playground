@@ -29,11 +29,11 @@ fi
 filebase=/root/scripts
 
 echo "Docker pull dependency images, you can comment this if already have them ..."
-if [[ -d "/root/.cache" ]]; then
-    echo "Cache found at /root/.cache ..."
-    if [[ ! -f "/root/.cache/.loaded" ]]; then
-        find /root/.cache/* | xargs -I'{}' docker load -i '{}'
-        touch /root/.cache/.loaded
+if [[ -d "/root/.sqlflow" ]]; then
+    echo "Cache found at /root/.sqlflow ..."
+    if [[ ! -f "/root/.sqlflow/.loaded" ]]; then
+        find /root/.sqlflow/* | xargs -I'{}' sh -c "docker load -i '{}' && sleep 10"
+        touch /root/.sqlflow/.loaded
     fi
 else
     # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml

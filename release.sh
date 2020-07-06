@@ -32,8 +32,9 @@ VBoxManage sharedfolder remove "$vm" --name home_vagrant_desktop
 VBoxManage sharedfolder remove "$vm" --name vagrant
 echo "Done."
 
-echo "Rebind serial port file"
+echo "Rebind serial port file and disable it because it does not work on Windows"
 VBoxManage modifyvm "$vm" --uartmode1 file /tmp/playground.log
+VBoxManage modifyvm "$vm" --uart1 off
 echo "Done."
 
 echo "Exporting vm ..."
