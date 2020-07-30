@@ -35,15 +35,19 @@ if [[ -d "/root/.sqlflow" ]]; then
         find /root/.sqlflow/* | xargs -I'{}' sh -c "docker load -i '{}' && sleep 10"
         touch /root/.sqlflow/.loaded
     fi
+    # use local step images for model zoo model
+    docker tag sqlflow/sqlflow:step sqlflow/sqlflow:latest
 else
     # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
     docker pull sqlflow/sqlflow:jupyter
     docker pull sqlflow/sqlflow:mysql
     docker pull sqlflow/sqlflow:server
     docker pull sqlflow/sqlflow:step
+    docker pull sqlflow/sqlflow:modelzooserver
     docker pull argoproj/argoexec:v2.7.7
     docker pull argoproj/argocli:v2.7.7
     docker pull argoproj/workflow-controller:v2.7.7
+    docker tag sqlflow/sqlflow:modelzooserver sqlflow/sqlflow:model_zoo
 fi
 echo "Done."
 
@@ -163,6 +167,7 @@ expose argo service/argo-server 9001:2746
 expose default pod/sqlflow-server 8888:8888
 expose default pod/sqlflow-server 3306:3306
 expose default pod/sqlflow-server 50051:50051
+expose default pod/sqlflow-server 50055:50055
 
 # Get Jupyter Notebook's token, for single-user mode, we disabled the token checking
 # jupyter_addr=$(kubectl logs pod/sqlflow-server notebook | grep -o -E "http://127.0.0.1[^?]+\?token=.*" | head -1)
@@ -176,6 +181,7 @@ Access Jupyter Notebook at: http://localhost:8888
 Access Kubernetes Dashboard at: http://localhost:9000
 Access Argo Dashboard at: http://localhost:9001
 Access SQLFlow with cli: ./sqlflow --data-source="\"$mysql_addr\""
+Access SQLFlow Model Zoo at: localhost:50055
 
 Stop minikube with: minikube stop
 Stop vagrant vm with: vagrant halt
