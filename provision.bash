@@ -96,6 +96,6 @@ echo "Done."
 echo "Disable cloudimg grub settings ..."
 sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/g' \
     -e 's/^#GRUB_TERMINAL=console$/GRUB_TERMINAL=console/g' /etc/default/grub
-rm /etc/default/grub.d/50-cloudimg-settings.cfg
+rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
 update-grub
 echo "Done."
