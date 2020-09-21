@@ -78,3 +78,7 @@ Anyway, given a running VM, the end-user can run the following command to connec
 ```bash
 sqlflow --sqlflow-server=my-vm.aws.com:50051
 ```
+
+### For End-users with Kubernetes (without a VM)
+
+Now, SQLFlow playground supports directly installing on Kubernetes. Users can refer to [this doc](https://github.com/sql-machine-learning/sqlflow/blob/develop/doc/run/kubernetes.md) to apply a fast deployment.
