@@ -1,19 +1,24 @@
 # SQLFlow Playground Server
 
-SQLFlow Playground Server expose an REST API service which enable users to share
+SQLFlow Playground Server exposes a REST API service that enables users to share
 the resources in one playground cluster. Users can take advantage of SQLFlow by
-installing a small plugin on her/his own Jupyter Notebook.
+installing a small plugin on her/his Jupyter Notebook.
+
+This service is used to extend the SQLFlow Playground's capability, especially
+when we need to manage the resource in the k8s cluster. It clearly is not for
+those who use the playground in single-user mode or those who just want to connect
+to the SQLFlow server in the playground.
 
 ## The Architecture
 
 **SQLFlow Playground Server** is a side-by-side service of our playground cluster.
-Now, it is designed as a http server which receives user login, creates DB
-resource and so on. This server use `cubectl` to manipulate the resource in
+Now, it is designed as an http server which receives user login, creates DB
+resource, and so on. This server uses `kubectl` to manipulate the resource in
 the playground(a k8s cluster). It's in someway the gateway of the playground.
-Like described in below diagram, the interaction of the three subjects could
-be: Clients ask the playground server for some resource. The server authorize
-the client and create the resource on the playground. The client connect to
-the playground and do train/predict tasks using the created resource.
+As described in the below diagram, the interaction of the three subjects could
+be: Clients ask the playground server for some resource. The server authorizes
+the client and create the resource on the playground. The client connects to
+the playground and does train/predict tasks using the created resource.
 
 ```
    ----------------run task--------------->
@@ -23,7 +28,7 @@ Clients <--> Playground Server <--> Playground
 
 ## Supported API
 
-Request url path is composed by the prefix `/api/` and the api name, like:
+Request URL path is composed by the prefix `/api/` and the api name, like:
 
 ```url
     https://playground.sqlflow.tech/api/heart_beat
@@ -56,14 +61,14 @@ maintainer can use below command:
       --server_key=key_store/server/server.key \
       --server_crt=key_store/server/server.crt
 ```
-In above commands, we first installed the sqlflow playground package
+In the above commands, we first installed the sqlflow playground package
 which carries the main cluster operation logic.  Then, we use the key
 tool to generate a server certification file (Of course, it's not necessary
-if you have your own certification files) which enable us to provide
+if you have your own certification files) which enables us to provide
 `https` service.  Finally, we start the `REST API` service at port 50052.
 
-Our playground service use bi-directional validation.  So, maintainer need
-to generate a certification file for trusted user. Use below command and
+Our playground service uses bi-directional validation.  So, the maintainer
+needs to generate a certification file for a trusted user. Use below command and
 send the generated `.crt` and `.key` file together with the `ca.crt` to
 the user.
 
@@ -71,12 +76,13 @@ the user.
     gen_cert.sh some_client
 ```
 
-### For Users
-To use this service, user should get authorized from the playground's maintainer.
+### For The User
+
+To use this service, the user should get authorized from the playground's maintainer.
 In detail, user should get `ca.crt`, `client.key` and the `client.crt` file from
-the maintainer and keep them in some very-safe place. Also the user should ask
+the maintainer and keep them in some very-safe place. Also, the user should ask
 the maintainer for the sqlflow server address and the sqlflow playground server
-address. Then, user will install Jupyter Notebook and the SQLFlow plugin package
+address. Then, the user will install Jupyter Notebook and the SQLFlow plugin package
 and do some configuration. Finally, the user can experience SQLFlow in his Jupyter 
 Notebook.
 
@@ -100,7 +106,7 @@ EOF
 
 ## Implementation
 
-We use [tornado](https://www.tornadoweb.org/) as the web framework which provide
+We use [tornado](https://www.tornadoweb.org/) as the web framework which provides
 a very good request dispatching mechanism. By the way, this framework is also
 adopted by Jupyter Notebook. The request processing is split into two steps:
 
@@ -118,7 +124,7 @@ adopted by Jupyter Notebook. The request processing is split into two steps:
            self.write("hello SQLFlow!") 
     ```
 In addition, We add a k8s manipulate class, which can create resource in the
-cluster. It's now implemented by a brutal way (use kubectl). We may refine it
+cluster. It's now implemented in a brutal way (use kubectl). We may refine it
 by using k8s's API.
 
 ## TODO
