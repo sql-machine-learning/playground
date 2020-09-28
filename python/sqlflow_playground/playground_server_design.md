@@ -2,28 +2,34 @@
 
 SQLFlow Playground Server exposes a REST API service that enables users to share
 the resources in one playground cluster. Users can take advantage of SQLFlow by
-installing a small plugin on her/his Jupyter Notebook.
+installing a small [plugin](https://github.com/sql-machine-learning/pysqlflow)
+on her/his Jupyter Notebook.
 
 This service is used to extend the SQLFlow Playground's capability, especially
-when we need to manage the resource in the k8s cluster. It clearly is not for
-those who use the playground in single-user mode or those who just want to connect
-to the SQLFlow server in the playground.
+when we need to manage the resource in the k8s cluster. We suppose the playground
+as a pure backend service (without Jupyter/JupyterHub) which provides machine 
+learning capability for some frontend. It clearly is not for those who just want
+to connect to the SQLFlow server in the playground through our built-in Jupyter 
+Notebook. Currently, this service is used to run our tutorials on [Aliyun
+DSW for Developer](https://dsw-dev.data.aliyun.com/) which behaves as a frontend
+of our playground.
 
 ## The Architecture
 
-**SQLFlow Playground Server** is a side-by-side service of our playground cluster.
+**SQLFlow Playground Server** is a side-car service of our playground cluster.
 Now, it is designed as an http server which receives user login, creates DB
 resource, and so on. This server uses `kubectl` to manipulate the resource in
 the playground(a k8s cluster). It's in someway the gateway of the playground.
 As described in the below diagram, the interaction of the three subjects could
 be: Clients ask the playground server for some resource. The server authorizes
 the client and create the resource on the playground. The client connects to
-the playground and does train/predict tasks using the created resource.
+the SQLFlow server in the playground and does train/predict tasks using the
+created resource.
 
 ```
-   ----------------run task--------------->
-   |                                      |
-Clients <--> Playground Server <--> Playground
+   ----------------run task--------------------------->
+   |                                                  |
+Clients <--> Playground Server <--> Playground[SQLFlow Server, MySQL Server...]
 ```
 
 ## Supported API
