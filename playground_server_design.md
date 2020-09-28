@@ -10,7 +10,7 @@ installing a small plugin on her/his own Jupyter Notebook.
 Now, it is designed as a http server which receives user login, creates DB
 resource and so on. This server use `cubectl` to manipulate the resource in
 the playground(a k8s cluster). It's in someway the gateway of the playground.
-Like described in below diagram: the interaction of the three subjects could
+Like described in below diagram, the interaction of the three subjects could
 be: Clients ask the playground server for some resource. The server authorize
 the client and create the resource on the playground. The client connect to
 the playground and do train/predict tasks using the created resource.
@@ -23,7 +23,7 @@ Clients <--> Playground Server <--> Playground
 
 ## Supported API
 
-Request url path is composed by the api name prefixed by `/api/`, like:
+Request url path is composed by the prefix `/api/` and the api name, like:
 
 ```url
     https://playground.sqlflow.tech/api/heart_beat
