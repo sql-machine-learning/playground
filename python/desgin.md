@@ -9,11 +9,11 @@ installing a small plugin on her/his own Jupyter Notebook.
 **SQLFlow Playground Server** is a side-by-side service of our playground cluster.
 Now, it is designed as a http server which receives user login, creates DB
 resource and so on. This server use `cubectl` to manipulate the resource in
-the playground(a k8s cluster). It's in someway the gateway of the playground,
-like below. The interaction of the three subjects could be: Clients ask the
-playground server for some resource. The server authorize the client and create
-the resource on the playground. The client connect to the playground and do
-train/predict tasks using the created resource.
+the playground(a k8s cluster). It's in someway the gateway of the playground.
+Like described in below diagram: the interaction of the three subjects could
+be: Clients ask the playground server for some resource. The server authorize
+the client and create the resource on the playground. The client connect to
+the playground and do train/predict tasks using the created resource.
 
 ```
    ----------------run task--------------->
@@ -123,7 +123,8 @@ by using k8s's API.
 
 ## TODO
 
-We currently do not have a real user management mechanism, instead, we just
+1. We currently do not have a real user management mechanism, instead, we just
 checked the user's certification file. Maybe, we can add this feature along
-with some statistics functionality. Cluster resource release is another thing
-to do in the future.
+with some statistics functionality.
+1. Cluster resource release is another thing to do in the future.
+1. This service can be deployed in our playground too.
