@@ -26,8 +26,8 @@ Vagrant.configure("2") do |config|
                     auto_correct: true
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 16384
-    v.cpus = 8
+    v.memory = 8192
+    v.cpus = 4
   end
 
   # Bind the host directory ./ into the VM.

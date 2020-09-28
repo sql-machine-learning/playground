@@ -8,7 +8,7 @@ VAGRANT_SHARED_FOLDER=/home/vagrant/desktop
 source $VAGRANT_SHARED_FOLDER/sqlflow/docker/dev/find_fastest_resources.sh
 
 echo "Setting apt-get mirror..."
-rm /etc/apt/sources.list && sync
+rm -rf /var/lib/apt/lists/* /etc/apt/sources.list
 find_fastest_apt_source >/etc/apt/sources.list
 apt-get update
 
@@ -61,6 +61,41 @@ if which minikube > /dev/null; then
     echo "minikube installed. Skip."
 else
     $VAGRANT_SHARED_FOLDER/sqlflow/scripts/travis/install_minikube.sh
+    minikube config set WantUpdateNotification false
 fi
 echo "Done."
 
+echo "Copy files ..."
+# In non-develop mode, we want the user see the start.bash
+# immediately after she/he logs on the vm
+cp "$VAGRANT_SHARED_FOLDER/start.bash" "/root/"
+
+read -r -d '\t' files <<EOM
+sqlflow/scripts/travis/export_k8s_vars.sh
+sqlflow/docker/dev/find_fastest_resources.sh
+sqlflow/scripts/travis/start_argo.sh
+sqlflow/doc/run/k8s/install-sqlflow.yaml
+\t
+EOM
+
+mkdir -p "/root/scripts"
+for file in ${files[@]}; do
+    cp "$VAGRANT_SHARED_FOLDER/$file" "/root/scripts/$(basename $file)"
+done
+echo "Done."
+
+echo "Change root password ..."
+echo "root:sqlflow" | chpasswd
+sed -i -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
+    -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' \
+    /etc/ssh/sshd_config
+service ssh restart
+echo "Done."
+
+
+echo "Disable cloudimg grub settings ..."
+sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/g' \
+    -e 's/^#GRUB_TERMINAL=console$/GRUB_TERMINAL=console/g' /etc/default/grub
+rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
+update-grub
+echo "Done."

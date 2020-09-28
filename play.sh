@@ -63,7 +63,8 @@ echo -e "\033[32m
 Playground VM has been successfully set up. You may want to go into the VM and start the SQLFlow playground using the following command:
 
 vagrant ssh
-sudo su && cd desktop && ./start.bash
+sudo su
+cd desktop && ./start.bash
 
 \033[0m"
 

@@ -25,21 +25,36 @@ if [[ "$(whoami)" != "root" ]]; then
     exit 1
 fi
 
+# script base dir for starting the minikube cluster
+filebase=/root/scripts
+
 echo "Docker pull dependency images, you can comment this if already have them ..."
-# c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
-docker pull sqlflow/sqlflow:jupyter
-docker pull sqlflow/sqlflow:mysql
-docker pull sqlflow/sqlflow:server
-docker pull sqlflow/sqlflow:step
-docker pull argoproj/argoexec:v2.7.7
-docker pull argoproj/argocli:v2.7.7
-docker pull argoproj/workflow-controller:v2.7.7
+if [[ -d "/root/.sqlflow" ]]; then
+    echo "Cache found at /root/.sqlflow ..."
+    if [[ ! -f "/root/.sqlflow/.loaded" ]]; then
+        find /root/.sqlflow/* | xargs -I'{}' sh -c "docker load -i '{}' && sleep 10"
+        touch /root/.sqlflow/.loaded
+    fi
+    # use local step images for model zoo model
+    docker tag sqlflow/sqlflow:step sqlflow/sqlflow:latest
+else
+    # c.f. https://github.com/sql-machine-learning/sqlflow/blob/develop/.travis.yml
+    docker pull sqlflow/sqlflow:jupyter
+    docker pull sqlflow/sqlflow:mysql
+    docker pull sqlflow/sqlflow:server
+    docker pull sqlflow/sqlflow:step
+    docker pull sqlflow/sqlflow:modelzooserver
+    docker pull argoproj/argoexec:v2.7.7
+    docker pull argoproj/argocli:v2.7.7
+    docker pull argoproj/workflow-controller:v2.7.7
+    docker tag sqlflow/sqlflow:modelzooserver sqlflow/sqlflow:model_zoo
+fi
 echo "Done."
 
 # NOTE: According to https://stackoverflow.com/a/16619261/724872,
 # source is very necessary here.
-source $(dirname $0)/sqlflow/scripts/travis/export_k8s_vars.sh
-source $(dirname $0)/sqlflow/docker/dev/find_fastest_resources.sh
+source $filebase/export_k8s_vars.sh
+source $filebase/find_fastest_resources.sh
 
 # (FIXME:lhw) If grep match nothing and return 1, do not exit
 # Find a way that we do not need to use 'set -e'
@@ -109,7 +124,7 @@ argo_server_alive=$(is_pod_ready "argo" "app=argo-server")
 if [[ "$argo_server_alive" == "yes" ]]; then
     echo "Already in running."
 else
-    $(dirname $0)/sqlflow/scripts/travis/start_argo.sh
+    $filebase/start_argo.sh
 fi
 wait_or_exit "argo" "is_pod_ready argo app=argo-server" "yes"
 
@@ -127,7 +142,7 @@ sqlflow_alive=$(is_pod_ready "default" "app=sqlflow-server")
 if [[ "$sqlflow_alive" == "yes" ]]; then
     echo "Already in running."
 else
-    kubectl apply -f sqlflow/doc/run/k8s/install-sqlflow.yaml
+    kubectl apply -f $filebase/install-sqlflow.yaml
 fi
 wait_or_exit "SQLFlow" "is_pod_ready default app=sqlflow-server" "yes"
 
@@ -152,18 +167,21 @@ expose argo service/argo-server 9001:2746
 expose default pod/sqlflow-server 8888:8888
 expose default pod/sqlflow-server 3306:3306
 expose default pod/sqlflow-server 50051:50051
+expose default pod/sqlflow-server 50055:50055
 
-jupyter_addr=$(kubectl logs pod/sqlflow-server notebook | grep -o -E "http://127.0.0.1[^?]+\?token=.*" | head -1)
+# Get Jupyter Notebook's token, for single-user mode, we disabled the token checking
+# jupyter_addr=$(kubectl logs pod/sqlflow-server notebook | grep -o -E "http://127.0.0.1[^?]+\?token=.*" | head -1)
 mysql_addr="mysql://root:root@tcp($(kubectl get -o jsonpath='{.status.podIP}' pod/sqlflow-server))/?maxAllowedPacket=0"
 
 echo -e "
 \033[32m
 Congratulations, SQLFlow playground is up!
 
-Access Jupyter Notebook at: $jupyter_addr
+Access Jupyter Notebook at: http://localhost:8888
 Access Kubernetes Dashboard at: http://localhost:9000
 Access Argo Dashboard at: http://localhost:9001
-Access SQLFlow with cli: ./sqlflow --datasource="\"$mysql_addr\""
+Access SQLFlow with cli: ./sqlflow --data-source="\"$mysql_addr\""
+Access SQLFlow Model Zoo at: localhost:50055
 
 Stop minikube with: minikube stop
 Stop vagrant vm with: vagrant halt
