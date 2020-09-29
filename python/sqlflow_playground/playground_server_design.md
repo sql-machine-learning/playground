@@ -17,7 +17,7 @@ of our playground.
 ## The Architecture
 
 **SQLFlow Playground Server** is a side-car service of our playground cluster.
-Now, it is designed as an http server which receives user login, creates DB
+Now, it is designed as an HTTP server which receives user login, creates DB
 resource, and so on. This server uses `kubectl` to manipulate the resource in
 the playground(a k8s cluster). It's in someway the gateway of the playground.
 As described in the below diagram, the interaction of the three subjects could
@@ -39,8 +39,9 @@ Request URL path is composed by the prefix `/api/` and the api name, like:
 ```url
     https://playground.sqlflow.tech/api/heart_beat
 ```
-This service always uses `https` and only accepts authorized clients
-by checking their certification file.
+This service always uses `HTTPS` and only accepts authorized clients
+by checking their certification file. So there is no dedicated api
+for user authentication.
 
 Currently supported API are:
 | name | method | params | description |
@@ -71,7 +72,7 @@ In the above commands, we first installed the sqlflow playground package
 which carries the main cluster operation logic.  Then, we use the key
 tool to generate a server certification file (Of course, it's not necessary
 if you have your own certification files) which enables us to provide
-`https` service.  Finally, we start the `REST API` service at port 50052.
+`HTTPS` service.  Finally, we start the `REST API` service at port 50052.
 
 Our playground service uses bi-directional validation.  So, the maintainer
 needs to generate a certification file for a trusted user. Use below command and
@@ -132,11 +133,3 @@ adopted by Jupyter Notebook. The request processing is split into two steps:
 In addition, We add a k8s manipulate class, which can create resource in the
 cluster. It's now implemented in a brutal way (use kubectl). We may refine it
 by using k8s's API.
-
-## TODO
-
-1. We currently do not have a real user management mechanism, instead, we just
-checked the user's certification file. Maybe, we can add this feature along
-with some statistics functionality.
-1. Cluster resource release is another thing to do in the future.
-1. This service can be deployed in our playground too.
