@@ -17,7 +17,7 @@ of our playground.
 ## The Architecture
 
 **SQLFlow Playground Server** is a side-car service of our playground cluster.
-Now, it is designed as an HTTP server which receives user login, creates DB
+Now, it is designed as an HTTP server which does user authorization, creates DB
 resource, and so on. This server uses `kubectl` to manipulate the resource in
 the playground(a k8s cluster). It's in someway the gateway of the playground.
 As described in the below diagram, the interaction of the three subjects could
@@ -34,13 +34,13 @@ Clients <--> Playground Server <--> Playground[SQLFlow Server, MySQL Server...]
 
 ## Supported API
 
-Request URL path is composed by the prefix `/api/` and the api name, like:
+Request URL path is composed by the prefix `/api/` and the API name, like:
 
 ```url
     https://playground.sqlflow.tech/api/heart_beat
 ```
 This service always uses `HTTPS` and only accepts authorized clients
-by checking their certification file. So there is no dedicated api
+by checking their certification file. So there is no dedicated API
 for user authentication.
 
 Currently supported API are:
