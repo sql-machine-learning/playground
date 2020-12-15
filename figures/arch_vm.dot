@@ -1,11 +1,12 @@
 digraph G {
+        rankdir = TB;
         node [shape=box];
 
         User1 [shape=oval, label="Lily"];
         User2 [shape=oval, label="Bob"];
         User3 [shape=oval, label="Eva"];
 
-        {rank = same; User1; User2; User3}
+        {rank = source; User1; User2; User3}
 
         Browser1 [label="Web browser"];
         Browser2 [label="Web browser"];
@@ -14,11 +15,13 @@ digraph G {
 
         subgraph cluster_vm {
                 label="VM"
+                DockerRegistry [label="Docker registry"];
+                DBMS [label="MySQL"];
                 subgraph cluster_container {
                         label="sqlflow/sqlflow:latest";
                         Jupyter [label="Jupyter Notebook server +\n SQLFlow magic command"];
                         SQLFlow [label="SQLFlow server"];
-                        DBMS [label="MySQL"];
+                        ModelZoo [label="Model Zoo server"];
                 }
                 subgraph cluster_minikube {
                     label="minikube";
@@ -37,9 +40,14 @@ digraph G {
         Argo -> DBMS [label="submit SQL statement"];
         Argo -> AI [label="submit AI job"];
         Argo -> DBMS [label="verify data schema"];
+        ModelZoo -> DockerRegistry [label="share model definition"];
+        DockerRegistry -> SQLFlow [label="use model definition"];
+        SQLFlow -> DBMS [label="save trained models"];
+        ModelZoo -> DBMS [label="share trained models"];
 
         Client [label="sqlflow command-line client"];
 
         User3 -> Client;
         Client -> SQLFlow [label="SQL/Flow program"];
+        Client -> ModelZoo [label="share models"];
 }
