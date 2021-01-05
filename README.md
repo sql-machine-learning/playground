@@ -35,7 +35,7 @@ I chose this deployment plan for reasons:
    on minikube as well.  But that would add challenge to export ports.
    Running the container directly in the VM but out of minikube, we
 
-   1. expoe the in-container port by adding `EXPOSE` statement in the
+   1. expose the in-container port by adding `EXPOSE` statement in the
       Dockerfile, and
    1. expose the docker port for accessing from outside of the VM by
       adding the following code snippet to the Vagrantfile.
