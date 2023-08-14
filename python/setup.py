@@ -30,7 +30,7 @@ VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'tornado==6.0.4'
+    'tornado==6.3.3'
 ]
 SETUP_REQUIRED = [
     'pytest-runner'
